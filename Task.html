@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Task Allocation System</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+	<div class="container">
+		<h1>Task Allocation System</h1>
+		<form method="POST">
+			<label for="name">Employee Name:</label>
+			<input type="text" id="name" name="name" required>
+
+			<label for="tickets">Number of Tickets:</label>
+			<input type="number" id="tickets" name="tickets" required>
+
+			<label for="severity">Severity:</label>
+			<select id="severity" name="severity" required>
+				<option value="">Select</option>
+				<option value="high">High</option>
+				<option value="medium">Medium</option>
+				<option value="low">Low</option>
+			</select>
+
+			<button type="submit">Allocate Task</button>
+		</form>
+
+		{% if score is not none %}
+			<p>Employee Score: {{ score }}</p>
+			{% if score >= 70 %}
+				<p>This task can be allocated to the employee.</p>
+			{% else %}
+				<p>This task cannot be allocated to the employee.</p>
+			{% endif %}
+		{% endif %}
+	</div>
+</body>
+</html>
