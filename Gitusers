@@ -1,0 +1,33 @@
+from github import Github
+
+# Replace the placeholders with your GitHub username and personal access token
+username = 'YOUR_USERNAME'
+token = 'YOUR_TOKEN'
+
+# Create a PyGithub object using your access token
+g = Github(token)
+
+# Replace the placeholder with the name of the GitHub organization
+org_name = 'ORGANIZATION_NAME'
+
+# Get the organization object
+org = g.get_organization(org_name)
+
+# Replace the placeholder with the name of the user whose commit count you want to fetch
+user_name = 'USER_NAME'
+
+# Initialize a counter to keep track of the total commit count
+total_commits = 0
+
+# Iterate over all the repositories in the organization
+for repo in org.get_repos():
+
+    # Get the user object for the specified user in the repository
+    user = repo.get_contributor(user_name)
+
+    # If the user is found, add their commit count to the total count
+    if user:
+        total_commits += user.contributions
+
+# Print the total commit count
+print(f'Total commits for {user_name} in {org_name}: {total_commits}')
