@@ -1,0 +1,38 @@
+import requests
+
+# Define the GitHub API endpoint and user to check
+endpoint = "https://api.github.com/users/{user}/repos"
+user = "github"
+
+# Send a GET request to the endpoint to get the user's repositories
+response = requests.get(endpoint.format(user=user))
+
+# Check if the request was successful
+if response.status_code == 200:
+    # Extract the list of repositories from the response
+    repos = response.json()
+    total_commits = 0
+    
+    # Loop through each repository
+    for repo in repos:
+        # Define the GitHub API endpoint for the repository's commits
+        commits_endpoint = "https://api.github.com/repos/{owner}/{repo}/commits"
+        owner = repo["owner"]["login"]
+        repo_name = repo["name"]
+        
+        # Send a GET request to the endpoint to get the repository's commits
+        commits_response = requests.get(commits_endpoint.format(owner=owner, repo=repo_name))
+        
+        # Check if the request was successful
+        if commits_response.status_code == 200:
+            # Extract the list of commits from the response
+            commits = commits_response.json()
+            
+            # Add the number of commits to the total count
+            total_commits += len(commits)
+    
+    # Print the total count of commits by the user
+    print(f"{user} has made {total_commits} commits across all repositories.")
+else:
+    # Print an error message if the request was not successful
+    print(f"Error: {response.status_code} - {response.text}")
