@@ -1,0 +1,46 @@
+import pandas as pd
+import json
+
+def flatten_json(data):
+    """
+    Recursively flatten a nested JSON structure into a list of dictionaries,
+    where each dictionary corresponds to a row in an XLSX file.
+    """
+    # If the input data is a list, recursively flatten each item in the list
+    if isinstance(data, list):
+        rows = []
+        for item in data:
+            rows.extend(flatten_json(item))
+        return rows
+
+    # If the input data is a dictionary, flatten it into a single row
+    elif isinstance(data, dict):
+        row = {}
+        for key, value in data.items():
+            # If the value is another nested JSON structure, recursively flatten it
+            if isinstance(value, (list, dict)):
+                sub_rows = flatten_json(value)
+                for i, sub_row in enumerate(sub_rows):
+                    for sub_key, sub_value in sub_row.items():
+                        row[f"{key}_{i}_{sub_key}"] = sub_value
+            else:
+                row[key] = value
+        return [row]
+
+    # If the input data is a scalar value, return it as a single row with a single column
+    else:
+        return [{'value': data}]
+
+
+# Load the JSON data into a dictionary
+with open('data.json', 'r') as f:
+    data = json.load(f)
+
+# Flatten the nested JSON data into a list of dictionaries
+rows = flatten_json(data)
+
+# Create a pandas DataFrame from the list of rows
+df = pd.DataFrame(rows)
+
+# Write the DataFrame to an XLSX file
+df.to_excel('data.xlsx', index=False)
