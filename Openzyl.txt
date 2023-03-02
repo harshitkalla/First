@@ -18,14 +18,14 @@ for item in data:
     row = []
     for key in header:
         if isinstance(item.get(key), dict):
-            for subkey, subvalue in item[key].items():
-                row.append(subvalue)
+            for subkey in header:
+                row.append(item[key].get(subkey, ''))
         elif isinstance(item.get(key), list):
             for subitem in item[key]:
-                for subkey, subvalue in subitem.items():
-                    row.append(subvalue)
+                for subkey in header:
+                    row.append(subitem.get(subkey, ''))
         else:
-            row.append(item.get(key))
+            row.append(item.get(key, ''))
     ws.append(row)
 
 # Save the workbook
