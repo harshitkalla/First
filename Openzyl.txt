@@ -1,0 +1,32 @@
+import json
+import openpyxl
+
+# Load JSON data from file
+with open('data.json') as f:
+    data = json.load(f)['data']
+
+# Create a new workbook and sheet
+wb = openpyxl.Workbook()
+ws = wb.active
+
+# Flatten the JSON data and write to the worksheet
+keys = set().union(*(d.keys() for d in data))
+header = list(keys)
+ws.append(header)
+
+for item in data:
+    row = []
+    for key in header:
+        if isinstance(item.get(key), dict):
+            for subkey, subvalue in item[key].items():
+                row.append(subvalue)
+        elif isinstance(item.get(key), list):
+            for subitem in item[key]:
+                for subkey, subvalue in subitem.items():
+                    row.append(subvalue)
+        else:
+            row.append(item.get(key))
+    ws.append(row)
+
+# Save the workbook
+wb.save('data.xlsx')
