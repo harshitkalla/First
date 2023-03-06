@@ -1,0 +1,58 @@
+import openpyxl
+import requests
+
+# Define the URL of the ServiceNow API endpoint
+url = "https://<your-instance>.service-now.com/api/now/table/change_request"
+
+# Define the credentials for ServiceNow authentication
+user = "<your-username>"
+pwd = "<your-password>"
+
+# Define the headers for the ServiceNow API request
+headers = {"Content-Type": "application/json", "Accept": "application/json"}
+
+# Open the Excel file and select the active worksheet
+workbook = openpyxl.load_workbook("data.xlsx")
+worksheet = workbook.active
+
+# Iterate over the rows in the worksheet and retrieve the "username" column
+for row in worksheet.iter_rows(min_row=2, min_col=1, max_col=1, values_only=True):
+    username = row[0]
+
+    # Define the data payload for the ServiceNow API request
+    data = {"sysparm_query": "sys_created_by={}".format(username)}
+
+    # Make a request to the ServiceNow API to retrieve the changes created by the user
+    response = requests.get(url, auth=(user, pwd), headers=headers, json=data)
+
+    # Parse the response JSON and count the total number of changes
+    changes = response.json()["result"]
+    total_changes = len(changes)
+
+    # Initialize counters for the normal and informational changes
+    normal_count = 0
+    informational_count = 0
+
+    # Iterate over the changes and check their category
+    for change in changes:
+        # Define the data payload for the ServiceNow API request
+        data = {"sysparm_fields": "category", "sysparm_query": "sys_id={}".format(change["sys_id"])}
+
+        # Make a request to the ServiceNow API to retrieve the category of the change
+        response = requests.get(url, auth=(user, pwd), headers=headers, json=data)
+
+        # Parse the response JSON and increment the appropriate counter based on the category
+        category = response.json()["result"][0]["category"]
+        if category == "normal":
+            normal_count += 1
+        elif category == "informational":
+            informational_count += 1
+
+    # Update the worksheet with the counts of normal and informational changes
+    normal_cell = worksheet.cell(row=row[0].row, column=2)
+    normal_cell.value = normal_count
+    informational_cell = worksheet.cell(row=row[0].row, column=3)
+    informational_cell.value = informational_count
+
+# Save the updated worksheet to the Excel file
+workbook.save("data.xlsx")
