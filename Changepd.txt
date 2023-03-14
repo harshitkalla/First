@@ -1,0 +1,15 @@
+import json
+import pandas as pd
+
+# Load JSON data
+with open('data.json', 'r') as f:
+    json_data = json.load(f)
+
+# Extract list of dictionaries from 'body' key
+data = json_data['body']
+
+# Convert list of dictionaries to a pandas DataFrame
+df = pd.DataFrame.from_records(data)
+
+# Save DataFrame to an XLSX file
+df.to_excel('data.xlsx', index=False)
