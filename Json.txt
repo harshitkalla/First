@@ -1,0 +1,13 @@
+import json
+
+json_string = '{ "results": { "change": [ { "group": "alpha", "Change": "123" }, { "group": "beta", "Change": "234" }, { "group": "alpha", "Change": "123" } ] } }'
+
+json_data = json.loads(json_string)
+groups = set()
+allowed_groups = ["alpha", "gamma"]  # specify the groups you want to consider
+
+for item in json_data["results"]["change"]:
+    if item["group"] in allowed_groups:
+        groups.add(item["group"])
+
+print(groups)
