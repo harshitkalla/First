@@ -1,0 +1,7 @@
+As a large enterprise with a high volume of changes to software and infrastructure, our current change management process is highly manual and time-consuming.
+Implementing COTG as an automated approach to change management will streamline our process and reduce manual efforts and time.
+COTG's ability to create changes quickly and with minimal inputs means that our IT team can spend less time on administrative tasks and more time on strategic work.
+With the ability to create N no. of child changes with just a parent change number and count required in lighting speed, COTG will help us manage complex changes more efficiently.
+The ability to create tasks in change and assign them to any user or group will help us track and manage changes more effectively.
+By reducing the risk of errors and delays in our change management process, COTG will help us deliver software and infrastructure changes more quickly and with greater reliability.
+This will have a positive impact on our business operations and help us stay competitive in the market.
