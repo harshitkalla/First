@@ -1,0 +1,13 @@
+import json
+
+json_str = '{ "Results": { "Change": [{ "Crno": 123, "State": "cancelled" }, { "Crno": 457, "State": "cancelled" }, { "Crno": 236, "State": "review" }, { "Crno": 974, "State": "implement" }, { "Crno": 652, "State": "new" } ] } }'
+
+json_obj = json.loads(json_str)
+
+count = 0
+
+for item in json_obj["Results"]["Change"]:
+    if item["State"] not in ["new", "cancelled"]:
+        count += 1
+
+print("Count of records where state is not new or cancelled:", count)
