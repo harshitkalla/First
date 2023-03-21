@@ -1,0 +1,29 @@
+import json
+
+# assuming the JSON is stored in a file called "data.json"
+with open("data.json", "r") as f:
+    data = json.load(f)
+
+# extract the "Change" list from the "Results" dictionary
+change_list = data["Results"]["Change"]
+
+# initialize a dictionary to store the counts
+counts = {}
+
+# iterate over the records and count the ones that meet the criteria
+for record in change_list:
+    if record["State"] not in ["new", "cancelled"]:
+        group = record["GRoup"]
+        if group in counts:
+            counts[group] += 1
+        else:
+            counts[group] = 1
+
+# print the overall count
+total_count = sum(counts.values())
+print(f"Total count: {total_count}")
+
+# print the group-wise counts
+print("Group-wise counts:")
+for group, count in counts.items():
+    print(f"{group}: {count}")
