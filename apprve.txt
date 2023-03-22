@@ -1,0 +1,30 @@
+from flask import Flask, render_template, request, jsonify
+import requests
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/process', methods=['POST'])
+def process():
+    user_id = request.form['user_id']
+    api_url = f'https://example.com/api?id={user_id}'
+    response = requests.get(api_url).json()
+    approvals = response['Approvals']
+    requested_sys_id = None
+    for request in approvals['requests']:
+        if request['State'] == 'requested':
+            requested_sys_id = request['sys_id']
+            break
+    if requested_sys_id is not None:
+        second_api_url = f'https://example.com/second_api?sys_id={requested_sys_id}'
+        second_api_response = requests.get(second_api_url).json()
+        # Process second_api_response as needed
+        return render_template('result.html', result=second_api_response)
+    else:
+        return jsonify({'success': False})
+
+if __name__ == '__main__':
+    app.run(debug=True)
