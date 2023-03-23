@@ -1,0 +1,19 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+@app.route('/process_json', methods=['POST'])
+def process_json():
+    data = request.get_json()
+    results = data.get('Results', {}).get('Change', [])
+
+    filtered_results = []
+    for result in results:
+        if result.get('State') != 'cancelled':
+            filtered_results.append(result)
+
+    response_data = {'Results': {'Change': filtered_results}}
+    return jsonify(response_data)
+
+if __name__ == '__main__':
+    app.run()
