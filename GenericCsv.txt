@@ -1,0 +1,27 @@
+import os
+import re
+import pandas as pd
+
+# Define the pattern that the csv files should match
+csv_pattern = re.compile(r'^.*\.csv$')
+
+# Read in the user.csv file and create a new column for the count
+users = pd.read_csv('user.csv')
+users['count'] = 0
+
+# Loop through each row of the users dataframe
+for index, row in users.iterrows():
+    user_id = row['userid']
+    count = 0
+    
+    # Loop through each csv file in the current directory and sum the counts for the current user
+    for filename in os.listdir():
+        if csv_pattern.match(filename):
+            df = pd.read_csv(filename)
+            count += df.loc[df['userid'] == user_id]['count'].sum()
+        
+    # Update the count for the current user in the users dataframe
+    users.at[index, 'count'] = count
+    
+# Write the updated users dataframe back out to user.csv
+users.to_csv('user.csv', index=False)
