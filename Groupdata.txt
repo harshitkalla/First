@@ -1,0 +1,70 @@
+from flask import Flask, request, render_template
+import requests
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+@app.route('/result', methods=['POST'])
+def result():
+    change_num = request.form['change_num']
+    api_url = f'https://example.com/api?change={change_num}'
+    response = requests.get(api_url).json()
+    groups = []
+    for request in response['results']['approvals_requests']:
+        if request['state'] != 'cancelled':
+            groups.append({'group': request['group'], 'state': request['state']})
+    return render_template('result.html', groups=groups)
+
+if __name__ == '__main__':
+    app.run()
+
+---form---
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Change Approval Status</title>
+  </head>
+  <body>
+    <h1>Change Approval Status</h1>
+    <form method="POST" action="/result">
+      <label for="change_num">Enter Change Number:</label>
+      <input type="text" id="change_num" name="change_num">
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
+
+
+
+--output---
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Approval Status for Change {{ change_num }}</title>
+  </head>
+  <body>
+    <h1>Approval Status for Change {{ change_num }}</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Group Name</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for group in groups %}
+        <tr>
+          <td>{{ group['group'] }}</td>
+          <td>{{ group['state'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
