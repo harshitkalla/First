@@ -1,0 +1,22 @@
+import pandas as pd
+
+# Read in the user.csv file and create a new column for the count
+users = pd.read_csv('user.csv')
+users['count'] = 0
+
+# Loop through each row of the users dataframe
+for index, row in users.iterrows():
+    user_id = row['userid']
+    count = 0
+    
+    # Loop through each of the other csv files and sum the counts for the current user
+    for i in range(1, 4):
+        file_name = f'file{i}.csv'
+        df = pd.read_csv(file_name)
+        count += df.loc[df['userid'] == user_id]['count'].sum()
+        
+    # Update the count for the current user in the users dataframe
+    users.at[index, 'count'] = count
+    
+# Write the updated users dataframe back out to user.csv
+users.to_csv('user.csv', index=False)
