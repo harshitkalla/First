@@ -1,0 +1,28 @@
+import pandas as pd
+import os
+import re
+
+# Read user.csv and create a DataFrame with USERID column
+users = pd.read_csv('user.csv')
+user_ids = users['USERID']
+
+# Loop through other CSV files in directory
+for filename in os.listdir():
+    # Only process files that end with ".csv" and aren't "user.csv"
+    if filename.endswith('.csv') and filename != 'user.csv':
+        # Read the CSV file
+        df = pd.read_csv(filename)
+        # Remove leading/trailing spaces and non-numeric characters from USERID column
+        df['USERID'] = df['USERID'].astype(str).str.strip().replace('[^0-9\.]', '', regex=True)
+        # Convert USERID column to numeric type and drop NaN values
+        df['USERID'] = pd.to_numeric(df['USERID'], errors='coerce')
+        df.dropna(subset=['USERID'], inplace=True)
+        # Filter rows that match user_ids
+        matches = df[df['USERID'].isin(user_ids)]
+        # Group by USERID and sum the COUNT column
+        counts = matches.groupby('USERID')['COUNT'].sum()
+        # Update user.csv with the counts
+        users.loc[users['USERID'].isin(counts.index), 'COMMITS'] = counts.values
+
+# Save updated user.csv
+users.to_csv('user.csv', index=False)
