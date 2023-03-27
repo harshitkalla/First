@@ -1,0 +1,34 @@
+import os
+import pandas as pd
+
+# Read in the user.csv file and create a new column for the count
+try:
+    users = pd.read_csv('user.csv')
+    users['count'] = 0
+except pd.errors.ParserError as e:
+    print(f"Error parsing user.csv: {str(e)}. Exiting...")
+    exit()
+
+# Find all csv files in the directory
+csv_files = [f for f in os.listdir('.') if os.path.isfile(f) and f.endswith('.csv') and f != 'user.csv']
+
+# Loop over each user in the user.csv file
+for _, row in users.iterrows():
+    user_id = row['USERID']
+    count = 0
+
+    # Loop over each csv file
+    for filename in csv_files:
+        # Read in the csv file and find the count for the current user
+        try:
+            df = pd.read_csv(filename)
+            count += df.loc[df['USERID'] == user_id]['COMMITS'].sum()
+        except pd.errors.ParserError as e:
+            print(f"Error parsing {filename}: {str(e)}")
+            continue
+
+    # Update the count for the current user in the users dataframe
+    users.loc[users['USERID'] == user_id, 'count'] = count
+
+# Save the updated users dataframe to user.csv
+users.to_csv('user.csv', index=False)
