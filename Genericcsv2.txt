@@ -31,3 +31,5 @@ for index, row in users.iterrows():
     
 # Write the updated users dataframe back out to user.csv
 users.to_csv('user.csv', index=False)
+
+#print(f"File {filename}, user {user_id}: {df.loc[df['userid'] == user_id]['count']}")
