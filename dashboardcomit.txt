@@ -1,0 +1,24 @@
+import pandas as pd
+import plotly.express as px
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+from dash.dependencies import Input, Output
+
+# Load data from xlsx file
+df = pd.read_excel('your_file.xlsx')
+
+# Create a bar chart of commits by PodName
+fig = px.bar(df, x='PodName', y='commits')
+
+# Initialize the Dash app
+app = dash.Dash(__name__)
+
+# Define the layout of the app
+app.layout = html.Div([
+    html.H1('Commit Dashboard'),
+    dcc.Graph(id='commits-by-podname', figure=fig),
+])
+
+if __name__ == '__main__':
+    app.run_server(debug=True)
