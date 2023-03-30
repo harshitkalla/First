@@ -1,0 +1,29 @@
+from flask import Flask, render_template
+import requests
+
+app = Flask(__name__)
+
+@app.route('/submit_form', methods=['POST'])
+def submit_form():
+    crno = request.form['crno']
+    groupname = request.form['groupname']
+    userid = request.form['userid']
+
+    # Make a GET request to the API with the crno parameter
+    url = f"https://your_api_url?crno={crno}"
+    response = requests.get(url)
+
+    # Check if the response contains the approval you're looking for
+    json_response = response.json()
+    approvals = json_response["result"]["change_approvals"]
+    for approval in approvals:
+        if (approval["approver"] == userid and
+            approval["groupname"] == groupname and
+            approval["approval"] == "approved"):
+            flask_template_response = "hello"
+            break
+    else:
+        flask_template_response = "Don't use others id to approve. Its been tracked"
+
+    # Send the flask_template_response as the response to the HTML template
+    return render_template('response.html', response=flask_template_response)
