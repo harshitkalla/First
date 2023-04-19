@@ -1,0 +1,17 @@
+from flask import Flask
+import requests
+import xml.etree.ElementTree as ET
+
+app = Flask(__name__)
+
+@app.route('/')
+def get_tag_value():
+    url = "https://api.example.com/data"  # Replace with the actual API URL
+    response = requests.get(url)
+    xml_response = response.text
+    root = ET.fromstring(xml_response)
+    tag_value = root.find(".//tag_name").text  # Replace "tag_name" with the actual name of the tag
+    return "Tag Value: {}".format(tag_value)
+
+if __name__ == '__main__':
+    app.run(debug=True)
