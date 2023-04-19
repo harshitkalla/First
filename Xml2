@@ -1,0 +1,25 @@
+from flask import Flask
+import requests
+from bs4 import BeautifulSoup
+
+app = Flask(__name__)
+
+@app.route('/')
+def get_tag_value():
+    url = 'https://api.example.com/get_html'  # Replace with the actual API endpoint that returns HTML response
+    response = requests.get(url)
+    if response.status_code == 200:
+        html_response = response.text
+        soup = BeautifulSoup(html_response, 'html.parser')
+        tag_name = "empid"  # Replace "empid" with the actual name of the tag
+        tag_element = soup.find(tag_name)  # Find the tag in the HTML page
+        if tag_element is not None:
+            tag_value = tag_element.text  # Extract the text value if the tag was found
+            return "empid: {}".format(tag_value)
+        else:
+            return "Tag not found"  # Handle the case where the tag was not found
+    else:
+        return "Failed to fetch HTML response from API"  # Handle the case where the API request failed
+
+if __name__ == '__main__':
+    app.run(debug=True)
