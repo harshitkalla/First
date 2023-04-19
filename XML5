@@ -1,0 +1,38 @@
+from flask import Flask, render_template
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+from bs4 import BeautifulSoup
+
+app = Flask(__name__)
+
+@app.route('/')
+def get_user_details():
+    # Set up Selenium Chrome driver
+    chrome_service = ChromeService(executable_path='path/to/chromedriver')  # Replace with path to your chromedriver
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')
+    driver = webdriver.Chrome(service=chrome_service, options=chrome_options)
+
+    # Navigate to the URL that displays the XML content
+    driver.get('https://example.com/test')  # Replace with the URL that displays your XML content
+
+    # Get the HTML page content
+    html_content = driver.page_source
+
+    # Parse the HTML data using BeautifulSoup
+    soup = BeautifulSoup(html_content, 'html.parser')
+
+    # Extract the tag value for <id>
+    id_tag = soup.find('id')
+    id_value = id_tag.text if id_tag else None
+
+    # Close the Selenium Chrome driver
+    driver.quit()
+
+    # Render the HTML template with the extracted tag value
+    return render_template('user_details.html', id_value=id_value)
+
+if __name__ == '__main__':
+    app.run(debug=True)
