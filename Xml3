@@ -1,0 +1,23 @@
+from flask import Flask, redirect, request
+
+app = Flask(__name__)
+
+@app.route('/')
+def redirect_to_url():
+    # Redirect user to the URL that returns the XML data
+    return redirect('https://example.com/xml')
+
+@app.route('/display_xml', methods=['POST'])
+def display_xml():
+    # Retrieve the XML tag value from the redirected URL
+    xml_data = request.form.get('xml_data')  # Assuming the XML data is sent as form data with 'xml_data' field name
+    # Process the XML data as needed, e.g., extract tag value and display it
+    tag_value = 'N/A'  # Placeholder for tag value
+    if xml_data:
+        # Extract the tag value from the XML data
+        # Replace this logic with your actual parsing logic to extract the tag value
+        tag_value = 'Tag value: {}'.format(xml_data)  
+    return tag_value
+
+if __name__ == '__main__':
+    app.run(debug=True)
