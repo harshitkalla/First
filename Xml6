@@ -1,0 +1,34 @@
+from flask import Flask
+from bs4 import BeautifulSoup
+import requests
+from xml.etree import ElementTree
+
+app = Flask(__name__)
+
+@app.route('/')
+def get_xml_from_html():
+    # Define the URL to make the request
+    url = "https://example.com"
+
+    # Send the GET request using the requests library
+    response = requests.get(url)
+
+    # Check if the request was successful
+    if response.status_code == 200:
+        # Extract the XML data from the HTML page using BeautifulSoup
+        soup = BeautifulSoup(response.text, 'html.parser')
+        xml_string = soup.find('pre').text
+
+        # Parse the XML data
+        xml_root = ElementTree.fromstring(xml_string)
+
+        # Use ElementTree methods to access the desired XML tag(s) and retrieve the tag value(s)
+        tag_value = xml_root.find(".//tag_name").text
+
+        # Use the retrieved tag value(s) as needed
+        return "Tag value: {}".format(tag_value)
+    else:
+        return "AJAX request failed with status code: {}".format(response.status_code)
+
+if __name__ == '__main__':
+    app.run()
