@@ -1,0 +1,24 @@
+import requests
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/")
+def index():
+    # Replace "YOUR_USERNAME" and "YOUR_PASSWORD" with your actual credentials
+    auth = requests.auth.HTTPBasicAuth("YOUR_USERNAME", "YOUR_PASSWORD")
+    url = "https://example.com/authenticated-page"
+    
+    try:
+        response = requests.get(url, auth=auth)
+        if response.status_code == 200:
+            # Set the flag to True if the URL was successfully loaded with the given credentials
+            authenticated = True
+        else:
+            authenticated = False
+    except requests.exceptions.RequestException:
+        # Handle any exceptions that occur while making the request
+        authenticated = False
+
+    # Render the template with the authenticated flag
+    return render_template("index.html", authenticated=authenticated)
