@@ -1,0 +1,23 @@
+Title: COTG - Change Management Web App: Feature Writeup
+
+Speed:
+1. Create Change: The COTG web app allows users to create multiple changes efficiently. Users can quickly generate any number of change requests, saving time and effort in the change management process.
+2. Approve Change: With COTG, approving changes becomes faster than ever. Users can mass approve parent changes and their associated child changes in a single click, streamlining the approval process and reducing manual effort.
+3. Create Emergency Change: COTG offers the ability to create emergency changes, ensuring critical updates or fixes can be implemented promptly without delays in the change management workflow.
+4. Close Change: The web app enables users to close changes seamlessly. This feature ensures that once a change has been successfully implemented and validated, it can be marked as closed, keeping the change management records up to date.
+5. Create Task and PAM Task in Change: COTG empowers users to create tasks and Pre-Approved Maintenance (PAM) tasks within a change request. This feature facilitates granular task management and allows for better organization and execution of change-related activities.
+6. Clone Any Change: The COTG web app provides the functionality to clone any change. Users can easily duplicate existing changes, saving time and effort in recreating similar change requests, especially in cases where multiple similar changes are required.
+
+Scale:
+1. Clone Change: COTG allows users to clone changes effortlessly. This feature enables the duplication of entire change requests, including associated tasks and details. It helps scale change management efforts by streamlining the creation of similar changes or templates for future use.
+2. Create Child Change of Parent Change and Map It: Users can create child changes associated with a parent change in COTG. This feature enables hierarchical change management, where changes can be structured as parent-child relationships. Mapping child changes to their parent change enhances scalability and traceability in complex change scenarios.
+
+Resilience:
+1. Automatically Add Release Task to Avoid Ice Compliant DEPL 4.01: COTG includes an automatic release task addition feature to prevent Ice compliant DEPL 4.01 issues. By integrating this resilience measure, the web app helps ensure compliance with relevant deployment requirements and mitigates potential risks associated with this particular deployment scenario.
+2. Change Monitoring: COTG offers change monitoring capabilities to track non-closed changes. This feature provides visibility into changes that have not yet been closed, allowing users to identify and address non-compliant changes promptly. By proactively monitoring changes, the web app enhances resilience in change management processes.
+
+People:
+1. Approve Change: The COTG web app streamlines the approval process by allowing users to approve both parent changes and their associated child changes simultaneously. This feature simplifies the approval workflow and ensures that all related changes receive the necessary approvals from the designated personnel.
+2. Change Status View: COTG provides a comprehensive view of the approval status for a given change. This feature enables users to quickly check the status of change approvals, ensuring transparency and facilitating effective communication among team members involved in the change management process.
+
+In summary, the COTG web app offers a range of features based on the pillars of Speed, Scale, Resilience, and People. These features collectively enhance the efficiency, scalability, resilience, and collaboration aspects of change management using ServiceNow API, empowering users to streamline and optimize their change management workflows.
