@@ -11,8 +11,9 @@ def lambda_handler(event, context):
         connection = pymysql.connect(host=host, user=user, password=password, database=database, cursorclass=pymysql.cursors.DictCursor)
         with connection.cursor() as cursor:
             cursor.execute(query)
-            result = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()]
-            print(result)
+            result = cursor.fetchall()
+            for row in result:
+                print(row)
     except pymysql.MySQLError as e:
         print(f"Error: {e}")
     finally:
