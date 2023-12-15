@@ -5,7 +5,7 @@ execute_query = lambda host, user, password, database, query: (
         cursor.execute(query),
         [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()]
     )
-)(pymysql.connect(host=host, user=user, password=password, database=database), pymysql.cursors.DictCursor)
+)(pymysql.connect(host=host, user=user, password=password, database=database), pymysql.connect(host=host, user=user, password=password, database=database).cursor(pymysql.cursors.DictCursor))
 
 # Example usage:
 host = "your-rds-endpoint"
