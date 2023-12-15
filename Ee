@@ -1,7 +1,11 @@
-import pandas as pd
-import pymysql
+import mysql.connector
 
-execute_query = lambda host, user, password, database, query: pd.read_sql_query(query, pymysql.connect(host=host, user=user, password=password, database=database))
+execute_query = lambda host, user, password, database, query: (
+    lambda conn, cursor: (
+        cursor.execute(query),
+        [dict(zip(cursor.column_names, row)) for row in cursor.fetchall()]
+    )
+)(mysql.connector.connect(host=host, user=user, password=password, database=database), conn.cursor(dictionary=True))
 
 # Example usage:
 host = "your-rds-endpoint"
