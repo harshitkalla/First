@@ -8,10 +8,10 @@ def lambda_handler(event, context):
     query = "SELECT * FROM your_table"
 
     try:
-        connection = pymysql.connect(host=host, user=user, password=password, database=database)
+        connection = pymysql.connect(host=host, user=user, password=password, database=database, cursorclass=pymysql.cursors.DictCursor)
         with connection.cursor() as cursor:
             cursor.execute(query)
-            result = [dict(zip(cursor.column_names, row)) for row in cursor.fetchall()]
+            result = [dict(zip([column[0] for column in cursor.description], row)) for row in cursor.fetchall()]
             print(result)
     except pymysql.MySQLError as e:
         print(f"Error: {e}")
