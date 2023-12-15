@@ -1,0 +1,19 @@
+import pymysql
+
+def lambda_handler(event, context):
+    host = "your-rds-endpoint"
+    user = "your-username"
+    password = "your-password"
+    database = "your-database"
+    query = "SELECT * FROM your_table"
+
+    try:
+        connection = pymysql.connect(host=host, user=user, password=password, database=database)
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            result = [dict(zip(cursor.column_names, row)) for row in cursor.fetchall()]
+            print(result)
+    except pymysql.MySQLError as e:
+        print(f"Error: {e}")
+    finally:
+        connection.close()
