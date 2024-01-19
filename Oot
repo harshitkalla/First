@@ -1,0 +1,36 @@
+import boto3
+import os
+
+def lambda_handler(event, context):
+    rds_client = boto3.client('rds')
+    environments = ['ci', 'cert', 'perftest', 'dev']
+
+    try:
+        environment = event['environment'].lower()
+        action = event['action'].lower()
+
+        if environment in environments and action in ['on', 'off']:
+            clusters = [f'Test-{environment}']
+            instances = []
+
+            for cluster in clusters:
+                response = rds_client.describe_db_instances(DBInstanceIdentifier=cluster)
+                instances.extend(response['DBInstances'])
+
+            for instance in instances:
+                if action == 'on':
+                    rds_client.start_db_instance(DBInstanceIdentifier=instance['DBInstanceIdentifier'])
+                    print(f"Started RDS instance: {instance['DBInstanceIdentifier']}")
+                elif action == 'off':
+                    rds_client.stop_db_instance(DBInstanceIdentifier=instance['DBInstanceIdentifier'])
+                    print(f"Stopped RDS instance: {instance['DBInstanceIdentifier']}")
+        else:
+            print("Invalid environment or action. Please provide a valid environment (ci, cert, perftest, dev) and action (on, off).")
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
+
+# For local testing, replace 'ci' and 'on' with your desired environment and action
+# Uncomment the following lines
+# event = {'environment': 'ci', 'action': 'on'}
+# lambda_handler(event, None)
