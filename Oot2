@@ -1,0 +1,30 @@
+import boto3
+import os
+
+def lambda_handler(event, context):
+    rds_client = boto3.client('rds')
+    environments = ['ci', 'cert', 'perftest', 'dev']
+
+    try:
+        environment = event['environment'].lower()
+        action = event['action'].lower()
+        use_rounds_flag = event.get('use_rounds', False)
+
+        cluster_prefix = 'rounds-' if use_rounds_flag else 'Test-'
+        clusters = [f'{cluster_prefix}{environment}']
+        instances = []
+
+        for cluster in clusters:
+            response = rds_client.describe_db_instances(DBInstanceIdentifier=cluster)
+            instances.extend(response['DBInstances'])
+
+        for instance in instances:
+            if action == 'on':
+                rds_client.start_db_instance(DBInstanceIdentifier=instance['DBInstanceIdentifier'])
+                print(f"Started RDS instance: {instance['DBInstanceIdentifier']}")
+            elif action == 'off':
+                rds_client.stop_db_instance(DBInstanceIdentifier=instance['DBInstanceIdentifier'])
+                print(f"Stopped RDS instance: {instance['DBInstanceIdentifier']}")
+
+    except Exception as e:
+        print(f"Error: {str(e)}")
